@@ -81,6 +81,7 @@ const unsigned RENDER_VERTEX_COLOUR = 1 << 15;
 const unsigned RENDER_POINT_COLOUR = 1 << 16;
 
 /// GL_TEXTURE_2D will be enabled during rendering.
+/// Objects should submit texture coordinates.
 const unsigned RENDER_TEXTURE_2D = 1 << 17;
 
 /**

@@ -129,7 +129,7 @@ public:
      * all cases the pointers will only be set if carried by the particular
      * vertex type.
      */
-    void renderAllBatches(GLenum primitiveType, bool renderBump = false) const
+    void renderAllBatches(GLenum primitiveType, const RenderInfo& info) const
     {
         if (_vertexVBO == 0 || _indexVBO == 0)
         {
@@ -144,9 +144,9 @@ public:
         glVertexPointer(3, GL_DOUBLE, STRIDE, Traits::VERTEX_OFFSET());
 
         // Set other pointers as necessary
-        if (Traits::hasTexCoord())
+        if (Traits::hasTexCoord() && info.checkFlag(RENDER_TEXTURE_2D))
         {
-            if (renderBump)
+            if (info.checkFlag(RENDER_BUMP))
             {
                 glVertexAttribPointer(
                     ATTR_TEXCOORD, 2, GL_DOUBLE, GL_FALSE,
@@ -161,7 +161,7 @@ public:
         }
         if (Traits::hasNormal())
         {
-            if (renderBump)
+            if (info.checkFlag(RENDER_BUMP))
             {
                 glVertexAttribPointer(
                     ATTR_NORMAL, 3, GL_DOUBLE, GL_FALSE,
@@ -173,7 +173,7 @@ public:
                 glNormalPointer(GL_DOUBLE, STRIDE, Traits::NORMAL_OFFSET());
             }
         }
-        if (Traits::hasTangents() && renderBump)
+        if (Traits::hasTangents() && info.checkFlag(RENDER_BUMP))
         {
             glVertexAttribPointer(ATTR_TANGENT, 3, GL_DOUBLE, GL_FALSE,
                                   STRIDE, Traits::TANGENT_OFFSET());
@@ -182,14 +182,12 @@ public:
         }
 
         // Render each batch of indices
-        for (typename std::vector<Batch>::const_iterator i = _batches.begin();
-             i != _batches.end();
-             ++i)
+        for (const Batch batch : _batches)
         {
             glDrawElements(
-                primitiveType, GLint(i->size), RenderIndexTypeID,
+                primitiveType, GLint(batch.size), RenderIndexTypeID,
                 reinterpret_cast<const GLvoid*>(
-                    i->start * sizeof(Indices::value_type)
+                    batch.start * sizeof(Indices::value_type)
                 )
             );
         }

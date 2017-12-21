@@ -237,6 +237,9 @@ void OpenGLShaderPass::applyAllTextures(OpenGLState& current,
     // Apply our texture numbers to the current state
     if (textureMode != 0) // only if one of the RENDER_TEXTURE options
     {
+		// Require that renderables submit texture coordinates
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
         glMatrixMode(GL_TEXTURE);
 
         if (GLEW_VERSION_1_3)
@@ -264,6 +267,10 @@ void OpenGLShaderPass::applyAllTextures(OpenGLState& current,
 
         glMatrixMode(GL_MODELVIEW);
     }
+	else
+	{
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	}
 }
 
 // Set up cube map

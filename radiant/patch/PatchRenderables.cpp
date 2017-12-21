@@ -32,7 +32,7 @@ void RenderablePatchWireframe::render(const RenderInfo& info) const
         _vertexBuf.replaceData(currentVBuf);
     }
 
-    _vertexBuf.renderAllBatches(GL_QUAD_STRIP);
+    _vertexBuf.renderAllBatches(GL_QUAD_STRIP, info);
 }
 
 void RenderablePatchWireframe::queueUpdate()
@@ -49,11 +49,12 @@ void RenderablePatchSolid::render(const RenderInfo& info) const
 {
     if (_tess.vertices.empty() || _tess.indices.empty()) return;
 
+#if 0
     if (!info.checkFlag(RENDER_BUMP))
     {
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     }
-
+#endif
     // No colour changing
     glDisableClientState(GL_COLOR_ARRAY);
 
@@ -83,12 +84,14 @@ void RenderablePatchSolid::render(const RenderInfo& info) const
         _vertexBuf.replaceData(currentVBuf);
     }
 
-    _vertexBuf.renderAllBatches(GL_QUAD_STRIP, info.checkFlag(RENDER_BUMP));
+    _vertexBuf.renderAllBatches(GL_QUAD_STRIP, info);
 
+#if 0
 	if (!info.checkFlag(RENDER_BUMP))
 	{
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
+#endif
 }
 
 void RenderablePatchSolid::queueUpdate()

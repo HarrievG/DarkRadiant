@@ -91,7 +91,6 @@ void Winding::render(const RenderInfo& info) const
         // In cube-map mode, we submit the vertex coordinate as the texture
         // coordinate. The RenderSystem will set the appropriate texture matrix
         // etc.
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glTexCoordPointer(
             3, GL_DOUBLE, sizeof(WindingVertex), &firstElement.vertex
         );
@@ -124,7 +123,6 @@ void Winding::render(const RenderInfo& info) const
         // Set texture coordinates in 2D texture mode
 		if (info.checkFlag(RENDER_TEXTURE_2D))
         {
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(
                 2, GL_DOUBLE, sizeof(WindingVertex), &firstElement.texcoord
             );
@@ -133,8 +131,6 @@ void Winding::render(const RenderInfo& info) const
 
     // Submit all data to OpenGL
 	glDrawArrays(GL_POLYGON, 0, GLsizei(size()));
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void Winding::testSelect(SelectionTest& test, SelectionIntersection& best)
