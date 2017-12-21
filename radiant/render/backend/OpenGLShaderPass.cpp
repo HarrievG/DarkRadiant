@@ -475,6 +475,15 @@ void OpenGLShaderPass::applyState(OpenGLState& current,
         setState(requiredState, changingBitsMask, RENDER_LINESTIPPLE, GL_LINE_STIPPLE);
         setState(requiredState, changingBitsMask, RENDER_POLYGONSTIPPLE, GL_POLYGON_STIPPLE);
 
+		if (changingBitsMask & requiredState & (RENDER_VERTEX_COLOUR|RENDER_POINT_COLOUR))
+		{
+			glEnableClientState(GL_COLOR_ARRAY);
+		}
+		else if (changingBitsMask & ~requiredState & (RENDER_VERTEX_COLOUR|RENDER_POINT_COLOUR))
+		{
+			glDisableClientState(GL_COLOR_ARRAY);
+		}
+
     } // end of changingBitsMask-dependent changes
 
     // Set depth function

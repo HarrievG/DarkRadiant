@@ -211,6 +211,7 @@ public:
 	{
 		if (_vector.empty()) return;
 
+#if 0
         // Enable point colours if required
 		bool enablePointColours = info.checkFlag(RENDER_VERTEX_COLOUR) || 
 			(info.checkFlag(RENDER_POINT_COLOUR) && _mode == GL_POINTS);
@@ -219,14 +220,24 @@ public:
         {
             glEnableClientState(GL_COLOR_ARRAY);
         }
+#endif
+		
+		// Send vertex colours if required
+		if (info.checkFlag(RENDER_VERTEX_COLOUR | RENDER_POINT_COLOUR))
+		{
+			glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexCb), &(_vector.front().colour));
+		}
+		
+		glVertexPointer(3, GL_DOUBLE, sizeof(VertexCb), &(_vector.front().vertex));
 
-		pointvertex_gl_array(&_vector.front());
 		glDrawArrays(_mode, 0, static_cast<GLsizei>(_vector.size()));
 
+#if 0
 		if (enablePointColours)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
+#endif
 	}
 
 	// Convenience method to set the colour of the whole array
@@ -288,13 +299,16 @@ public:
 class RenderableVertexBuffer : public OpenGLRenderable
 {
 	const GLenum _mode;
-	const std::vector<VertexCb>& m_vertices;
+	const std::vector<VertexCb>& _vertices;
 public:
-	RenderableVertexBuffer(GLenum mode, const std::vector<VertexCb>& vertices)
-			: _mode(mode), m_vertices(vertices) {}
+	RenderableVertexBuffer(GLenum mode, const std::vector<VertexCb>& vertices) : 
+		_mode(mode), 
+		_vertices(vertices) 
+	{}
 
 	void render(const RenderInfo& info) const
     {
+#if 0
 		bool enableColours = info.checkFlag(RENDER_VERTEX_COLOUR)
 			|| (info.checkFlag(RENDER_POINT_COLOUR) && _mode == GL_POINTS);
         
@@ -302,29 +316,44 @@ public:
         {
             glEnableClientState(GL_COLOR_ARRAY);
         }
+#endif
+		// Send vertex colours if required
+		if (info.checkFlag(RENDER_VERTEX_COLOUR | RENDER_POINT_COLOUR))
+		{
+			glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexCb), &(_vertices.front().colour));
+		}
 
-		pointvertex_gl_array(m_vertices.data());
-		glDrawArrays(_mode, 0, static_cast<GLsizei>(m_vertices.size()));
+		glVertexPointer(3, GL_DOUBLE, sizeof(VertexCb), &(_vertices.front().vertex));
 
+		glDrawArrays(_mode, 0, static_cast<GLsizei>(_vertices.size()));
+
+#if 0 
 		if (enableColours)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
+#endif
 	}
 };
 
 /// Renderable wrapper for a set of vertices and indices stored in other arrays
-class RenderableIndexBuffer : public OpenGLRenderable
+class RenderableIndexBuffer : 
+	public OpenGLRenderable
 {
+private:
 	const GLenum _mode;
-	const IndexBuffer& m_indices;
-	const std::vector<VertexCb>& m_vertices;
+	const IndexBuffer& _indices;
+	const std::vector<VertexCb>& _vertices;
 public:
-	RenderableIndexBuffer(GLenum mode, const IndexBuffer& indices, const std::vector<VertexCb>& vertices)
-			: _mode(mode), m_indices(indices), m_vertices(vertices) {}
+	RenderableIndexBuffer(GLenum mode, const IndexBuffer& indices, const std::vector<VertexCb>& vertices) : 
+		_mode(mode), 
+		_indices(indices), 
+		_vertices(vertices) 
+	{}
 
 	void render(const RenderInfo& info) const
     {
+#if 0
 		bool enableColours = info.checkFlag(RENDER_VERTEX_COLOUR)
 			|| (info.checkFlag(RENDER_POINT_COLOUR) && _mode == GL_POINTS);
 
@@ -332,14 +361,24 @@ public:
         {
             glEnableClientState(GL_COLOR_ARRAY);
         }
+#endif
 
-		pointvertex_gl_array(m_vertices.data());
-		glDrawElements(_mode, GLsizei(m_indices.size()), RenderIndexTypeID, m_indices.data());
+		// Send vertex colours if required
+		if (info.checkFlag(RENDER_VERTEX_COLOUR | RENDER_POINT_COLOUR))
+		{
+			glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexCb), &(_vertices.front().colour));
+		}
 
+		glVertexPointer(3, GL_DOUBLE, sizeof(VertexCb), &(_vertices.front().vertex));
+
+		glDrawElements(_mode, GLsizei(_indices.size()), RenderIndexTypeID, _indices.data());
+
+#if 0 
 		if (enableColours)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
+#endif
 	}
 };
 

@@ -27,7 +27,9 @@ public:
 
         if (info.checkFlag(RENDER_VERTEX_COLOUR))
         {
+#if 0
             glEnableClientState(GL_COLOR_ARRAY);
+#endif
             glColorPointer(
                 4, GL_UNSIGNED_BYTE, sizeof(VertexCb), &m_vertices->colour
             );
@@ -36,10 +38,12 @@ public:
 		glVertexPointer(3, GL_DOUBLE, sizeof(VertexCb), &m_vertices->vertex);
 		glDrawElements(GL_LINES, GLsizei(m_size<<1), RenderIndexTypeID, &m_faceVertex.front());
 
+#if 0
 		if (info.checkFlag(RENDER_VERTEX_COLOUR))
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
+#endif
 	}
 
 	std::vector<EdgeRenderIndices> m_faceVertex;

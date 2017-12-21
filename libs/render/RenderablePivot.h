@@ -85,13 +85,17 @@ public:
 	{
 		if (_vertices.empty()) return;
 
+#if 0
 		glEnableClientState(GL_COLOR_ARRAY);
+#endif
 
 		glVertexPointer(3, GL_DOUBLE, sizeof(VertexCb), &_vertices.data()->vertex);
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexCb), &_vertices.data()->colour);
 		glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(_vertices.size()));
 
+#if 0
 		glDisableClientState(GL_COLOR_ARRAY);
+#endif
 	}
 
 	void render(RenderableCollector& collector, const VolumeTest& volume, const Matrix4& localToWorld) const

@@ -3,7 +3,10 @@
 void RenderablePatchWireframe::render(const RenderInfo& info) const
 {
     // No colour changing
+#if 0
     glDisableClientState(GL_COLOR_ARRAY);
+#endif
+
     if (info.checkFlag(RENDER_VERTEX_COLOUR))
     {
         glColor3f(1, 1, 1);
@@ -55,8 +58,10 @@ void RenderablePatchSolid::render(const RenderInfo& info) const
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 #endif
+#if 0
     // No colour changing
     glDisableClientState(GL_COLOR_ARRAY);
+#endif
 
     if (info.checkFlag(RENDER_VERTEX_COLOUR))
     {
